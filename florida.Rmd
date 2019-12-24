@@ -9,8 +9,6 @@ output: html_document
 knitr::opts_chunk$set(echo = FALSE)
 library(sf)
 library(fs)
-library(sp)
-library(rgdal)
 library(readxl)
 library(tidyverse)
 ```
@@ -51,16 +49,20 @@ pop <- pop %>%
   mutate(POP2020 = `2020`) %>%
   select(County, POP2020) %>%
   slice(1:67)
+
+test <- pop$POP2020
 ```
 
-
 ```{r}
-plot <- ggplot() +
-  geom_sf(data = vector3, aes(fill = POP2010))
+vector3[["POP2020"]]=test
 
-# cols <-
+# This adds the 2020 population estimates from my external Excel spreadsheet into the shapefile.
+
+plot <- ggplot() +
+  geom_sf(data = vector3, aes(fill = format(POP2020, scientific = FALSE)))
 
 # The colors are horrible if you fill by name, just FYI. Honestly not that helpful to fill by county name. Filling by POP2010 is much more helpful.
 ```
+
 
 
