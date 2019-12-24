@@ -10,10 +10,11 @@ knitr::opts_chunk$set(echo = FALSE)
 library(sf)
 library(fs)
 library(readxl)
+library(plyr)
 library(tidyverse)
 ```
 
-```{r reading in Florida shapefile}
+```{r reading in Florida shapefile, include=FALSE, warning=FALSE, echo=FALSE}
 fl <- st_read("shape/counties.shp")
 
 # So if you get weird errors (like gdal error 4 or a file corruption error) it probably means your file has been corrupted. Redownload it and also keep it with the other GIS files it came with (.shx, .dbf, etc.)
@@ -25,11 +26,11 @@ fl <- st_read("shape/counties.shp")
 dir_create(path = "clean")
 ```
 
-```{r}
+```{r, include=FALSE, warning=FALSE, echo=FALSE}
 write_rds(fl, path = "clean/fl-map.rds")
 ```
 
-```{r}
+```{r, include=FALSE, warning=FALSE, echo=FALSE}
 vector <- readRDS("clean/fl-map.rds")
 
 vector2 <- vector %>%
@@ -51,17 +52,43 @@ pop <- pop %>%
   slice(1:67)
 
 test <- pop$POP2020
+
+# test <- round_any(test, 1000, f = ceiling)
+
+test2 <- round_any(test, 250000, f = ceiling)
+
+# I decided to round up to the next 250000. This distorts
+
+# round_any is a plyr verb; be careful with this package and always load tidyverse again after using it.
 ```
 
-```{r}
-vector3[["POP2020"]]=test
+```{r, include=FALSE}
+vector3[["POP2020"]] <- test2
 
 # This adds the 2020 population estimates from my external Excel spreadsheet into the shapefile.
 
 plot <- ggplot() +
-  geom_sf(data = vector3, aes(fill = format(POP2020, scientific = FALSE)))
+  geom_sf(data = vector3, aes(fill = format(POP2020, scientific = FALSE))) +
+  labs(fill = "Population", caption = "Population rounded to nearest 250,000.\nTrue maximum county population is Miami-Dade at 2,861,579.") +
+  scale_fill_manual(values = c(
+    "#F1FAF2",
+    "#BBDDBF",
+    "#8BBD91",
+    "#5F9865",
+    "#3A7740",
+    "#1F5C25",
+    "#0B370F"
+  ))
+
+# The \n in the caption label breaks the caption into two lines.
+
+# Make sure you add the # at the beginning of each hex color code or it won't look right!
 
 # The colors are horrible if you fill by name, just FYI. Honestly not that helpful to fill by county name. Filling by POP2010 is much more helpful.
+```
+
+```{r, fig.align="center"}
+plot
 ```
 
 
