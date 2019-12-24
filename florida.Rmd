@@ -9,6 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = FALSE)
 library(sf)
 library(fs)
+library(readxl)
 library(tidyverse)
 ```
 
@@ -33,13 +34,29 @@ vector <- readRDS("clean/fl-map.rds")
 
 vector2 <- vector %>%
   filter(STATE_NAME == "Florida")
+
+vector3 <- vector2 %>%
+  arrange(NAME)
 ```
 
 ```{r}
-plot <- ggplot() +
-  geom_sf(data = vector2, aes(fill = POP2010))
+pop <- read_xlsx("clean/projections_2019_asrh_detailed_cl.xlsx")
 
-# The colors are horrible if you fill by name, just FYI. Honestly not that helpful to fill by county name.
+pop <- pop %>%
+  arrange(County) %>%
+  filter(Age == "Total") %>%
+  select(County, `2020`) %>%
+  mutate(POP2020 = `2020`) %>%
+  select(County, POP2020) %>%
+  slice(1:67)
+```
+
+
+```{r}
+plot <- ggplot() +
+  geom_sf(data = vector3, aes(fill = POP2010))
+
+# The colors are horrible if you fill by name, just FYI. Honestly not that helpful to fill by county name. Filling by POP2010 is much more helpful.
 ```
 
 
