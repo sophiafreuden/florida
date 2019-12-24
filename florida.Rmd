@@ -16,5 +16,30 @@ library(tidyverse)
 fl <- st_read("shape/counties.shp")
 
 # So if you get weird errors (like gdal error 4 or a file corruption error) it probably means your file has been corrupted. Redownload it and also keep it with the other GIS files it came with (.shx, .dbf, etc.)
+
+# Don't be afraid to print fl and see what's inside! It will make your life easier.
 ```
+
+```{r}
+dir_create(path = "clean")
+```
+
+```{r}
+write_rds(fl, path = "clean/fl-map.rds")
+```
+
+```{r}
+vector <- readRDS("clean/fl-map.rds")
+
+vector2 <- vector %>%
+  filter(STATE_NAME == "Florida")
+```
+
+```{r}
+plot <- ggplot() +
+  geom_sf(data = vector2, aes(fill = POP2010))
+
+# The colors are horrible if you fill by name, just FYI. Honestly not that helpful to fill by county name.
+```
+
 
