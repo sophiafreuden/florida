@@ -55,7 +55,7 @@ test <- pop$POP2020
 
 # test <- round_any(test, 1000, f = ceiling)
 
-test2 <- round_any(test, 250000, f = ceiling)
+test2 <- round_any(test, 250000)
 
 # I decided to round up to the next 250000. This distorts
 
@@ -69,7 +69,11 @@ vector3[["POP2020"]] <- test2
 
 plot <- ggplot() +
   geom_sf(data = vector3, aes(fill = format(POP2020, scientific = FALSE))) +
-  labs(fill = "Population", caption = "Population rounded to nearest 250,000.\nTrue maximum county population is Miami-Dade at 2,861,579.") +
+  labs(
+    title = "Estimated 2020 Population of Florida by County",
+    fill = "Population",
+    caption = "Population rounded to nearest 250,000."
+  ) +
   scale_fill_manual(values = c(
     "#F1FAF2",
     "#BBDDBF",
@@ -77,17 +81,18 @@ plot <- ggplot() +
     "#5F9865",
     "#3A7740",
     "#1F5C25",
-    "#0B370F"
-  ))
-
-# The \n in the caption label breaks the caption into two lines.
+    "#0B370F",
+    "#031C05"
+  )) +
+  theme(legend.position = "none") +
+  theme_minimal()
 
 # Make sure you add the # at the beginning of each hex color code or it won't look right!
 
 # The colors are horrible if you fill by name, just FYI. Honestly not that helpful to fill by county name. Filling by POP2010 is much more helpful.
 ```
 
-```{r, fig.align="center"}
+```{r plotting the static pop graph, fig.align="center"}
 plot
 ```
 
