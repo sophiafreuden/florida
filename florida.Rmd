@@ -1,0 +1,20 @@
+---
+title: "Florida"
+author: "Sophia Freuden"
+date: "12/23/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(sf)
+library(fs)
+library(tidyverse)
+```
+
+```{r reading in Florida shapefile}
+fl <- st_read("shape/counties.shp")
+
+# So if you get weird errors (like gdal error 4 or a file corruption error) it probably means your file has been corrupted. Redownload it and also keep it with the other GIS files it came with (.shx, .dbf, etc.)
+```
+
