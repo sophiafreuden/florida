@@ -9,6 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = FALSE)
 library(sf)
 library(fs)
+library(sp)
+library(rgdal)
 library(readxl)
 library(tidyverse)
 ```
@@ -55,6 +57,8 @@ pop <- pop %>%
 ```{r}
 plot <- ggplot() +
   geom_sf(data = vector3, aes(fill = POP2010))
+
+# cols <-
 
 # The colors are horrible if you fill by name, just FYI. Honestly not that helpful to fill by county name. Filling by POP2010 is much more helpful.
 ```
